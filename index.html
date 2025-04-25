@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>登頂最高効率計算ツール</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    label {
+      font-weight: bold;
+    }
+    select, input, button {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      white-space: pre-wrap;
+      margin-top: 20px;
+      background: #f0f0f0;
+      padding: 10px;
+    }
+    .step-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>登頂最高効率計算ツール</h1>
+
+  <label for="inputA">現在の順位を入力：</label><br>
+  <input type="number" id="inputA" value="20"><br><br>
+
+  <div class="step-section">
+    <label for="stepCount">試行回数：</label>
+    <select id="stepCount" onchange="updateStoneCost()"></select>
+    <span id="stoneCount"></span>
+  </div><br>
+
+  <button onclick="calculate()">計算する</button>
+
+  <h2>結果</h2>
+  <div id="result"></div>
+
+  <script>
+    const stepSelect = document.getElementById("stepCount");
+    const stoneLabel = document.getElementById("stoneCount");
+
+    // 試行回数の選択肢を追加（5〜100）
+    for (let i = 5; i <= 100; i += 5) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = `${i}回`;
+      stepSelect.appendChild(option);
+    }
+
+    stepSelect.value = "5"; // デフォルトを5回に設定
+    updateStoneCost();
+
+    function updateStoneCost() {
+      const count = Number(stepSelect.value);
+      let stones = "";
+
+      if (count >= 10) {
+        stones = `青輝石：${(count - 5) / 5 * 60}個`;
+      } else {
+        stones = "";
+      }
+
+      stoneLabel.textContent = stones;
+    }
+
+    function calculate() {
+      const input = Math.floor(Number(document.getElementById("inputA").value));
+      const steps = Number(stepSelect.value);
+      let results = "";
+      let current = input;
+
+      for (let i = 1; i <= steps; i++) {
+        let next = Math.floor(current * 0.7);
+        const diff = current - next;
+        if (diff <= 3) next = Math.max(1, next - 3);
+        results += `Step ${i}: ${next}\n`;
+        current = next;
+      }
+
+      document.getElementById("result").textContent = results;
+    }
+  </script>
+</body>
+</html>
