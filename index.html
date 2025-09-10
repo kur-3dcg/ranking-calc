@@ -93,22 +93,25 @@
       stoneLabel.textContent = stones;
     }
 
-    function calculate() {
-      const input = Math.floor(Number(document.getElementById("inputA").value));
-      const steps = Number(stepSelect.value);
-      let results = "";
-      let current = input;
+function calculate() {
+  const input = Math.floor(Number(document.getElementById("inputA").value));
+  const steps = Number(stepSelect.value);
+  let results = "";
+  let current = Math.min(15001, input); // 初期値（上限あり）
 
-      for (let i = 1; i <= steps; i++) {
-        let next = Math.floor(current * 0.7);
-        const diff = current - next;
-        if (diff <= 3) next = Math.max(1, next - 3);
-        results += `Step ${i}: ${next}\n`;
-        current = next;
-      }
+  for (let i = 1; i <= steps; i++) {
+    // ExcelのLAMBDAと同じ処理
+    let next = Math.min(Math.floor(current * 0.7), current - 3);
+    next = Math.max(1, next);
 
-      document.getElementById("result").textContent = results;
-    }
+    results += `Step ${i}: ${next}\n`; // 順位の推移を出力
+    current = next;
+  }
+
+  document.getElementById("result").textContent = results;
+}
+</script>
+
   </script>
 <hr>
 <p>ご意見・ご要望はこちら：<a href="https://twitter.com/kur_3dcg" target="_blank">@kur_3dcg</a></p>
